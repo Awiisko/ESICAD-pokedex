@@ -4,30 +4,35 @@
 <?php
 require_once("head.php");
 ?>
-<pre>
-    &lt;
+&lt;
     <table class = "tableau_pokemon">
     <thead class = "tableau_all">
-        <th>Numéro</th>
+        <th>N°</th>
         <th>Nom</th>
         <th>Photo</th>
-<?php
+        <th>Type 1</th>
+        <th>Type 2</th>
+        <?php
+require_once("head.php");
 require_once("database-connection.php");
-$query = $databaseConnection->query("SELECT * from pokemon");
+
+$query = $databaseConnection->query("SELECT pokemon.IdPokemon, pokemon.NomPokemon, pokemon.urlPhoto, typepokemon.libelleType, typepokemon2.libelleType AS 'Type 2' FROM pokemon LEFT JOIN typepokemon ON pokemon.IdTypePokemon = typepokemon.IdType LEFT JOIN typepokemon as typepokemon2 ON pokemon.idSecondTypePokemon = typepokemon2.IdType ORDER BY pokemon.IdPokemon");
 
 if (!$query) {
-    throw new RuntimeException ("Cannot execute query. Cause : " . mysqli_error($connection)); 
+    echo "Erreur SQL : " . $databaseConnection->error;
 } else {
-    $pokemons = $query->fetch_all(MYSQLI_ASSOC);
-    foreach ($pokemons as $pokemon) {
-        echo "<tr><td>" . $pokemon["IdPokemon"] . "</td><td>" . $pokemon["NomPokemon"] . "</td><td><img src='" . $pokemon["urlPhoto"] . "'></td></tr>";
+//    echo '<table>';
+    while ($data = $query->fetch_assoc()) {
+        echo '<tr>';
+        echo '<td>' . $data['IdPokemon'] . '</td>';
+        echo '<td>' . $data['NomPokemon'] . '</td>';
+        echo '<td><img src="' . $data['urlPhoto'] . '" alt="' . $data['NomPokemon'] . '"></td>';
+        echo '<td>' . $data['libelleType'] . '</td>';
+        echo '<td>' . $data['Type 2'] . '</td>';
+        echo '</tr>';
     }
+    echo '</table>';
 }
-?>
-    </thead>
-</table>
-    &gt;
-    </pre>
-<?php
+
 require_once("footer.php");
-?>
+?> 

@@ -4,7 +4,14 @@
 <?php
 require_once("head.php");
 require_once("database-connection.php");
-
+?>
+&lt;
+    <table class = "tableau_pokemon">
+    <thead class = "tableau_all">
+        <th>N°</th>
+        <th>Photo</th>
+        <th>Nom</th>
+        <?php
 $queryTypes = $databaseConnection->query("SELECT DISTINCT libelleType FROM typepokemon ORDER BY libelleType");
 
 if (!$queryTypes) {
@@ -12,9 +19,10 @@ if (!$queryTypes) {
 } else {
     while ($type = $queryTypes->fetch_assoc()) {
         echo '<h2>' . $type['libelleType'] . '</h2>';
-        echo '<table>';
 
-        $queryPokemon = $databaseConnection->query("SELECT pokemon.IdPokemon, pokemon.NomPokemon, pokemon.urlPhoto FROM pokemon INNER JOIN typepokemon ON pokemon.IdTypePokemon = typepokemon.IdType WHERE typepokemon.libelleType = '" . $type['libelleType'] . "' ORDER BY pokemon.IdPokemon");
+        $queryPokemon = $databaseConnection->query("SELECT pokemon.IdPokemon, pokemon.NomPokemon, pokemon.urlPhoto
+        FROM pokemon INNER JOIN typepokemon ON pokemon.IdTypePokemon = typepokemon.IdType 
+        WHERE typepokemon.libelleType = '" . $type['libelleType'] . "' ORDER BY pokemon.IdPokemon");
 
         if (!$queryPokemon) {
             echo "Erreur SQL : " . $databaseConnection->error;
@@ -28,7 +36,7 @@ if (!$queryTypes) {
             }
         }
 
-        echo '</table>';
+         echo '</table>';
     }
 }
 
