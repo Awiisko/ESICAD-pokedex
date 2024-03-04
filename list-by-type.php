@@ -6,12 +6,9 @@ require_once("head.php");
 require_once("database-connection.php");
 ?>
 &lt;
-    <table class = "tableau_pokemon">
-    <thead class = "tableau_all">
-        <th>N°</th>
-        <th>Photo</th>
-        <th>Nom</th>
+
         <?php
+        
 $queryTypes = $databaseConnection->query("SELECT DISTINCT libelleType FROM typepokemon ORDER BY libelleType");
 
 if (!$queryTypes) {
@@ -28,17 +25,26 @@ if (!$queryTypes) {
             echo "Erreur SQL : " . $databaseConnection->error;
         } else {
             while ($pokemon = $queryPokemon->fetch_assoc()) {
+                echo '<table class = "tableau_pokemon">';
+                echo '<thead class = "tableau_all">';
+                echo '    <th>N°</th>';
+                echo '    <th>Photo</th>';
+                echo '    <th>Nom</th>';
+                echo '</thead>';
+
+
                 echo '<tr>';
                 echo '<td>' . $pokemon['IdPokemon'] . '</td>';
                 echo '<td><a href="pokemon_details.php?id=' . $pokemon['IdPokemon'] . '"><img src="' . $pokemon['urlPhoto'] . '" alt="' . $pokemon['NomPokemon'] . '"></a></td>';
                 echo '<td><a href="pokemon_details.php?id=' . $pokemon['IdPokemon'] . '">' . $pokemon['NomPokemon'] . '</a></td>';
                 echo '</tr>';
-            }
+                echo '</table>';
+            }   
         }
 
-         echo '</table>';
     }
 }
+
 
 require_once("footer.php");
 ?>
