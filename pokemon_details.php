@@ -2,7 +2,7 @@
 require_once("head.php");
 require_once("database-connection.php");
 
-$id = $_GET['id']; // Récupérer l'ID du Pokémon à partir de l'URL
+$id = $_GET['id'];
 
 $query = $databaseConnection->query("SELECT * FROM pokemon WHERE IdPokemon = " . $id);
 
