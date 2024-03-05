@@ -4,14 +4,13 @@
 <?php
 require_once("head.php");
 ?>
-&lt;
     <table class = "tableau_pokemon">
     <thead class = "tableau_all">
         <th>N°</th>
         <th>Nom</th>
         <th>Photo</th>
-        <th>Type 1</th>
-        <th>Type 2</th>
+        <th>1er Type</th>
+        <th>2ème Type</th>
         <?php
 require_once("head.php");
 require_once("database-connection.php");
@@ -21,7 +20,6 @@ $query = $databaseConnection->query("SELECT pokemon.IdPokemon, pokemon.NomPokemo
 if (!$query) {
     echo "Erreur SQL : " . $databaseConnection->error;
 } else {
-//    echo '<table>';
     while ($data = $query->fetch_assoc()) {
         echo '<tr>';
         echo '<td>' . $data['IdPokemon'] . '</td>';

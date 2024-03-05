@@ -1,41 +1,27 @@
 <?php
+require_once("head.php");
 require_once("database-connection.php");
-$Nom_Pokemon = '';
-$Nom_Pokemon = $_POST['NomPokemon'] ?? 0;
 
-$sql = "SELECT * FROM pokemon WHERE NomPokemon LIKE '%$Nom_Pokemon%'";
+if (isset($_GET['q'])) {
+    $NomPoke = $_GET['q'];
 
-$resultat = $databaseConnection->query($sql);
+     $query = $databaseConnection->query("SELECT * FROM pokemon WHERE NomPokemon LIKE '" . $NomPoke . "%' ORDER BY NomPokemon");
 
-if ($resultat->num_rows > 0) {
-    while ($pokemon = $resultat->fetch_assoc()) {
-        echo '<h1>' . $pokemon['NomPokemon'] . '</h1>';
-        echo '<img src="' . $pokemon['urlPhoto'] . '" alt="' . $pokemon['NomPokemon'] . '">';
-        echo '<p>PV: ' . $pokemon['PV'] . '</p>';
-        echo '<p>Attaque: ' . $pokemon['Attaque'] . '</p>';
-        echo '<p>Défense: ' . $pokemon['Defense'] . '</p>';
-        echo '<p>Vitesse: ' . $pokemon['Vitesse'] . '</p>';
-        echo '<p>Spécial: ' . $pokemon['Special'] . '</p>';
-
-        $sqlEvolution = $databaseConnection->query("SELECT idEvolution FROM evolutionpokemon WHERE idPokemon = " . $pokemon['IdPokemon']);
-        if ($sqlEvolution->num_rows > 0) {
-            $evolution = $sqlEvolution->fetch_assoc();
-            $sqlEvolutionDetails = $databaseConnection->query("SELECT * FROM pokemon WHERE IdPokemon = " . $evolution['idEvolution']);
-            if ($sqlEvolutionDetails->num_rows > 0) {
-                $evolutionDetails = $sqlEvolutionDetails->fetch_assoc();
-                echo '<h2>Évolution : ' . $evolutionDetails['NomPokemon'] . '</h2>';
-                echo '<img src="' . $evolutionDetails['urlPhoto'] . '" alt="' . $evolutionDetails['NomPokemon'] . '">';
-                echo '<p>PV: ' . $evolutionDetails['PV'] . '</p>';
-                echo '<p>Attaque: ' . $evolutionDetails['Attaque'] . '</p>';
-                echo '<p>Défense: ' . $evolutionDetails['Defense'] . '</p>';
-                echo '<p>Vitesse: ' . $evolutionDetails['Vitesse'] . '</p>';
-                echo '<p>Spécial: ' . $evolutionDetails['Special'] . '</p>';
-            }
+    if (!$query) {
+        echo "Erreur SQL : " . $databaseConnection->error;
+    } else {
+        echo '<table>';
+        while ($pokemon = $query->fetch_assoc()) {
+            echo '<tr>';
+            echo '<td><a href="pokemon_details.php?id=' . $pokemon['IdPokemon'] . '"><img src="' . $pokemon['urlPhoto'] . '" alt="' . $pokemon['NomPokemon'] . '"></a></td>';
+            echo '<td><a href="pokemon_details.php?id=' . $pokemon['IdPokemon'] . '">' . $pokemon['NomPokemon'] . '</a></td>';
+            echo '</tr>';
         }
+        echo '</table>';
     }
 } else {
-    echo "Aucun Pokémon trouvé avec ce nom.";
+    echo "Aucun terme de recherche fourni.";
 }
 
-$databaseConnection->close();
+require_once("footer.php");
 ?>
